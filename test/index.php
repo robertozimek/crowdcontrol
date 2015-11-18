@@ -1,10 +1,9 @@
 <?php
-	// function collections
-	//include ('');
+	// TEST FILE FOR OUR PHP FILES
 	
 	session_start();
 	
-	// html header showing function
+	// temporary include to display index.html
 	include('includes/index.html');
 	
 	
