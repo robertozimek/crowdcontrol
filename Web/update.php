@@ -1,6 +1,22 @@
 <?php
     require_once('includes/database.php');
     //TODO: Implement handling post requests
+    if($_POST){
+      $input = file_get_contents("php://input");
+      $data = json_decode($input);
+
+      if($data){
+        $peoplein = $data['in'];
+        $peopleout = $data['out'];
+        $estab = $data['estab'];
+        $room = $data['room'];
+        $time = time("h:i:sa");
+        $date= date("Y-m-d");
+
+        $query = "UPDATE roomsinservice SET `peoplein` = '$peoplein', `peopleout` = '$peopleout', `date` = '$date', `time` = '$time'
+        WHERE `room` = '$room' AND `establishment` = '$estab'"
+      }
+    }
 
     if($_GET){
         if(isset($_GET['estab']) && isset($_GET['room'])){
