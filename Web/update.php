@@ -15,6 +15,10 @@
 
         $query = "UPDATE roomsinservice SET `peoplein` = '$peoplein', `peopleout` = '$peopleout', `date` = '$date', `time` = '$time'
         WHERE `room` = '$room' AND `establishment` = '$estab'"
+
+        if(!(db->query($query) === TRUE){
+          echo "Unable to update data.<br>"
+        }
       }
     }
 
