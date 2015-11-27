@@ -36,7 +36,10 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     mask = cv2.GaussianBlur(image, (21, 21), 0)
     mask = fgbg.apply(mask)
 
-    # for next frame clear stream
+    # apply a threshold to image frame
+    ret, mask = cv2.threshold(mask,20,255,cv2.THRESH_BINARY)
+
+    # for next frame, clear stream
     rawCapture.truncate(0)
 
     # break out of loop when 'q' is pressed
