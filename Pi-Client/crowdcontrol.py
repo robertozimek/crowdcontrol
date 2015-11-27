@@ -23,3 +23,20 @@ rawCapture = PiRGBArray(camera, size=(640, 480))
 
 # camera warmup
 time.sleep(0.1)
+
+# creating background subtraction
+fgbg = cv2.createBackgroundSubtractorKNN()
+
+# loop through each frame
+for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+
+    # for next frame clear stream
+	rawCapture.truncate(0)
+
+	# break out of loop when 'q' is pressed
+    if key == ord("q"):
+        break
+
+# clean up before exit
+camera.release()
+cv2.destroyAllWindows()
