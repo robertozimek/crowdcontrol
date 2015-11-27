@@ -29,11 +29,17 @@ fgbg = cv2.createBackgroundSubtractorKNN()
 
 # loop through each frame
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+    # get NumPy array from the frame
+    image = frame.array
+
+    # blur image frame and apply background subtraction
+    mask = cv2.GaussianBlur(image, (21, 21), 0)
+    mask = fgbg.apply(mask)
 
     # for next frame clear stream
-	rawCapture.truncate(0)
+    rawCapture.truncate(0)
 
-	# break out of loop when 'q' is pressed
+    # break out of loop when 'q' is pressed
     if key == ord("q"):
         break
 
