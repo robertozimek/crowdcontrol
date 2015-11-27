@@ -39,6 +39,19 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     # apply a threshold to image frame
     ret, mask = cv2.threshold(mask,20,255,cv2.THRESH_BINARY)
 
+    # erode image to remove outer noise,
+    # then dilate to fill inner pixels of object in the frame
+    mask = cv2.erode(mask, None, iterations=2)
+	mask = cv2.dilate(mask, None, iterations=2)
+
+    # get contours/edges of the objext
+    mask,contours, h = cv2.findContours(mask,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+
+    for m in contours:
+        # filter objects that have an area less than specified
+		if cv2.contourArea(m) < 6000:
+			continue
+
     # for next frame, clear stream
     rawCapture.truncate(0)
 
