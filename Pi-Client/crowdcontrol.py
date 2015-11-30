@@ -52,6 +52,15 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 		if cv2.contourArea(m) < 6000:
 			continue
 
+        # get bounding rectangle of object
+        (x, y, w, h) = cv2.boundingRect(m)
+
+        # if object is bigger or smaller than a certian width or height just ignore
+        if w > 300 and w < 90 and h > 300 and h < 190 and h > w*2.75:
+			continue
+
+
+
     # for next frame, clear stream
     rawCapture.truncate(0)
 
