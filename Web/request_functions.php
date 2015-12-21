@@ -7,13 +7,14 @@
     $exists = mysqli_num_rows($results);
 
     if($exists){
-      $comps = array();
+      $companies = array();
       while($rows = $results->fetch_assoc()){
-          $rooms[] = array("company_name" => $rows['company_name'], "join_date" => $rows['join_date']);
+          $companies[] = array("company_name" => $rows['company_name'], "join_date" => $rows['join_date']);
       }
-      return json_encode($comps);
+      return json_encode(array("companies" => $companies));
     }else{
-      echo "There are no companies" . "<br>";
+      http_response_code(404);
+      exit;
     }
   }
 
@@ -30,7 +31,10 @@
         $branches[] = array("company_name" => $company, "address" => $rows['branch_address'], "longitude" => $rows['longitude'],
                             "latitude" => $rows['latitude'], "opening_hours" => $rows['opening_hours'], "closing_hours" => $rows['closing_hours']);
       }
-      return json_encode($branches);
+      return json_encode(array("branches" => $branches));
+    }else{
+      http_response_code(404);
+      exit;
     }
   }
 
@@ -45,16 +49,19 @@
     if($exists){
       $rooms = array();
       while($rows = $results->fetch_assoc()){
-        $rooms[] = array("address" => $rows['branch_address'], "room" => $rows['room_number'],
+        $rooms[] = array("company" => $rows['company_name'], "address" => $rows['branch_address'], "room" => $rows['room_number'],
                           "max_capacity" => $rows['max_capacity']);
       }
-      return json_encode(array($company => $rooms));
+      return json_encode(array("rooms" => $rooms));
+    }else{
+      http_response_code(404);
+      exit;
     }
   }
 
   function request_crowd_report($db, $company, $branch, $room){
-    $query = "SELECT c.company_name, b.branch_address, r.room_number, r.people_in, r.people_out,
-              r.max_capacity, r.time FROM `company` AS c
+    $query = "SELECT c.company_name, b.branch_address, r.room_id, r.room_number, r.people_in, r.people_out,
+              r.max_capacity, r.date, r.time FROM `company` AS c
               INNER JOIN `branch` AS b on c.company_id = b.company_id
               INNER JOIN `room` AS r on b.branch_id = r.branch_id
               WHERE r.room_number = '$room' AND b.branch_address = '$branch' AND c.company_name = '$company'";
@@ -67,19 +74,38 @@
       $total_out = $rooms['people_out'];
       $max = $rooms['max_capacity'];
       $time = $rooms['time'];
+      $date = $rooms['date'];
       $curr_number = $total_in - $total_out;
 
-      if($curr_number >= 0)
+      if($curr_number >= 0){
         $crowd_percent = round(($total_in - $total_out) / $max * 100);
-      else
+        if($crowd_percent > 100){
+          $crowd_percent = 100;
+        }
+      }else{
         $crowd_percent = 0;
-
-      $room_info = array("company" => $company, "address" => $branch, "room" => $room, "time" => $time, "crowd" => $crowd_percent);
-      $crowd_report = json_encode($room_info);
-      echo $crowd_report;
+      }
+      $room_info = array("company" => $company, "address" => $branch, "room" => $room, "date" => $date,"time" => $time,
+                        "crowd" => $crowd_percent);
+      return json_encode(array("crowd" => $room_info));
     }else{
-      echo mysqli_error($db);
+      http_response_code(404);
+      exit;
     }
   }
 
+
+  function isClosed($room_id){
+    $query = "SELECT r.room_id, r.branch_id, b.branch_id, b.closing_hours FROM roon AS r
+              INNER JOIN branch AS b on r.branch_id = b.branch_id WHERE r.room_id = '$room_id'";
+    $results = $db->query($query);
+    if($results){
+      $rows = $results->fetch_assoc();
+      $curr_time = date("h:i:sa");
+      if($rows['closing_hours'] < $curr_time){
+        return true;
+      }
+    }
+    return false;
+  }
  ?>
