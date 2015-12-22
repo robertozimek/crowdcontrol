@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="crowdcontrolandroid.crowdcontrol">
+    //*Required to make requests to database*//
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".FindBusinesses"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".BusinessList1"
+            android:label="@string/title_activity_business_list1"
+            android:parentActivityName=".FindBusinesses"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="crowdcontrolandroid.crowdcontrol.FindBusinesses" />
+        </activity>
+        <activity
+            android:name=".BranchList"
+            android:label="@string/title_activity_branch_list"
+            android:parentActivityName=".BusinessList1"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="crowdcontrolandroid.crowdcontrol.BusinessList1" />
+        </activity>
+        <activity
+            android:name=".RoomList"
+            android:label="@string/title_activity_room_list"
+            android:parentActivityName=".BranchList"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="crowdcontrolandroid.crowdcontrol.BranchList" />
+        </activity>
+        <activity
+            android:name=".CrowdReport"
+            android:label="@string/title_activity_crowd_report"
+            android:parentActivityName=".RoomList"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="crowdcontrolandroid.crowdcontrol.RoomList" />
+        </activity>
+    </application>
+
+</manifest>

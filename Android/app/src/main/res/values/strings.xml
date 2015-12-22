@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">"CrowdControl "</string>
+    <string name="action_settings">Settings</string>
+    <string name="header_text">"Welcome to CrowdControl"</string>
+    <string name="search_disc">"Find Businesses in Your City"</string>
+    <string name="search_text">"Enter a City"</string>
+    <string name="find_button_text">"List All Available Businesses"</string>
+    <string name="title_activity_business_list1">List of Businesses</string>
+    <string name="title_activity_branch_list">BranchList</string>
+    <string name="title_activity_room_list">RoomList</string>
+    <string name="title_activity_crowd_report">CrowdReport</string>
+</resources>
