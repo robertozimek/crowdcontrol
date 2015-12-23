@@ -2,8 +2,16 @@
     date_default_timezone_set('America/New_York');
 
     require_once('database.php');
+    //Openshift's php version does not include the updated password_* function
+    //so use the library provided by github user ircmaxell
     require_once('password_compat-master/lib/password.php');
 
+    /**
+     *  Checks whether a password matches the hashed record in the database
+     *  @param string $pass the password to check if valid
+     *  @param string $auth hashed value to check password against
+     *  @return true if password matches, false otherwise
+     */
     function checkPass($pass, $auth){
       if(!password_verify($pass, $auth)){
         http_response_code(403);
@@ -13,6 +21,7 @@
       }
     }
 
+    //Expecting {"in" : "data", "out" : "data", "id" : "data", "auth" : "data"} from POST requests
     $input = file_get_contents('php://input');
     $data = json_decode($input, TRUE);
     if($data){
@@ -28,6 +37,8 @@
       $results = $db->query($query);
       if($results){
         $rows = $results->fetch_assoc();
+
+        //Make sure the PI's id matches the authentication key it sent before updating records in database
         if(checkPass($key, $rows['secret_key'])){
           $peoplein += $rows['people_in'];
           $peopleout += $rows['people_out'];
