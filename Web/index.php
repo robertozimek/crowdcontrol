@@ -19,6 +19,7 @@
 	//include html header showing page
 	include 'includes/header.php';
 	
+	// call respective pages, if not the main_body page
 	if( $page == 'business') {
 		include 'includes/businesses.php';
 	}else if( $page == 'project') {
