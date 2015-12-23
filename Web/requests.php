@@ -1,13 +1,17 @@
 <?php
     require_once('includes/database.php');
+    //PHP script containing the functions responsible for CRUD operations on the database
     require_once('request_functions.php');
 
+    //Authenticate the POST request sent by a PI
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
       require_once('includes/auth.php');
     }elseif($_SERVER['REQUEST_METHOD'] === 'GET'){
       if(isset($_GET["data"]) && !empty($_GET["data"])){
+        //The functions will all be returning JSON data
         header('Content-Type: application/json');
 
+        //Handle requests accordingly and if there are missing or misspelled arguments set status code 400 for Bad Request
         if($_GET["data"] === "comp"){
           echo request_companies($db);
 
