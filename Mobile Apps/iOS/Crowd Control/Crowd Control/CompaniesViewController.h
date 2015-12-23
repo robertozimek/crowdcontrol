@@ -9,9 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <AFNetworking/AFNetworking.h>
 
-@interface CompaniesViewController : UIViewController
+@interface CompaniesViewController : UITableViewController
 
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) NSArray *companies;
 @end
 

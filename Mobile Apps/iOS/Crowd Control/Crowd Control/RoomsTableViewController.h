@@ -14,6 +14,7 @@
 @property (nonatomic, strong) NSArray *rooms;
 @property (nonatomic, strong) NSString *company;
 @property (nonatomic, strong) NSString *address;
+@property (nonatomic, assign) BOOL open;
 
 
 @end
