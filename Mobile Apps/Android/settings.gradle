@@ -1,2 +1,0 @@
-include ':app', ':volley'
-project(':volley').projectDir = new File('volley-master')

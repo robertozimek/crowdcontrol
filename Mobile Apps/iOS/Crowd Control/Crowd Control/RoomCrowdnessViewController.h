@@ -16,5 +16,6 @@
 @property (nonatomic, strong) NSString *address;
 @property (nonatomic, strong) NSString *room;
 @property (nonatomic, strong) NSString *capacity;
+@property (nonatomic, assign) BOOL open;
 
 @end
