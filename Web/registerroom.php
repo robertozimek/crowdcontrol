@@ -1,10 +1,15 @@
 <?php
     require_once('includes/database.php');
+    //Openshift's php version does not include the updated password_* function
+    //so use the library provided by github user ircmaxell
     require_once('includes/password_compat-master/lib/password.php');
-    //loQkRnn01Z 1000A 1
-    //Xgxz5eDWIt 1000D 4
-    //eumqQ06eko 45 E 51st 5
-    //rn8fA0f3Gp 1000G 4
+
+    /**
+     *  Adds a company to the database
+     *  @param mysqli $db the database to add information to
+     *  @param string $company the company to add to
+     *  @param date $date the date when the company joined
+     */
     function addCompany($db, $company, $date){
       $insert_comp = "INSERT INTO company (`company_name`, `join_date`) VALUES ('$company', '$date')";
       if($db->query($insert_comp) === TRUE)
@@ -14,6 +19,15 @@
       }
     }
 
+    /**
+     *  Adds a branch to an existing company
+     *  @param mysqli $db the database to add information to
+     *  @param string $company the company the branch belongs to
+     *  @param string $branch the address of the branch to add
+     *  @param string $type what kind of establishment is this
+     *  @param time $opening_hours what time the establishment opens
+     *  @param time $closing_hours what time the establishment closes
+     */
     function addBranch($db, $company, $branch, $type, $opening_hours, $closing_hours){
       $insert_branch = "INSERT INTO branch (`company_id`, `branch_address`, `type`, `opening_hours`, `closing_hours`)
                         VALUES ((SELECT `company_id` FROM company WHERE `company_name` = '$company'), '$branch', '$type',
@@ -24,6 +38,14 @@
         echo mysqli_error($db);
     }
 
+    /**
+     *  Adds a room to an existing branch
+     *  @param mysqli $db the database to add information to
+     *  @param string $company the company the branch belongs to
+     *  @param string $branch the address of the branch the room belongs to
+     *  @param string $room the room number of the room to add
+     *  @param int $max_cap the max capacity of the room
+     */
     function addRoom($db, $company, $branch, $room, $max_cap){
       $sub_query = "SELECT c.company_id, b.branch_id, COALESCE(MAX(r.room_id), 0) AS `room_id` FROM company AS c
                     INNER JOIN branch b on b.company_id = c.company_id
@@ -34,6 +56,7 @@
       $branch_id = $ids['branch_id'];
       $room_id  = $ids['room_id'] + 1;
 
+      //Generate random string and then hash it to retrieve the authentication key for the Pi
       $rand = genRandom();
       $hash = password_hash($rand, PASSWORD_DEFAULT);
 
@@ -49,6 +72,7 @@
       }
     }
 
+    //Generate random string to be used as password
     function genRandom(){
       $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
       $charactersLength = strlen($characters);
@@ -58,22 +82,5 @@
         $randomString .= $characters[rand(0, $charactersLength - 1)];
       }
       return $randomString;
-    }
-
-    function getRoomOfCompany($db, $comp){
-      $query = "SELECT r.room_number, r.branch_id, b.branch_id, b.company_id, b.branch_address, c.company_name, c.company_id FROM room AS r
-                INNER JOIN branch b on r.branch_id = b.branch_id
-                INNER JOIN company c on b.company_id = c.company_id
-                WHERE c.company_name = '$comp'";
-      $results = $db->query($query);
-      $exists = mysqli_num_rows($results);
-
-      if($exists){
-        $data = array();
-        while($rows = $results->fetch_assoc()){
-          $data[] = array("company" => $rows['company_name'], "address" => $rows['branch_address'],"room" => $rows['room_number']);
-        }
-        echo json_encode(array("data" => $data));
-      }
     }
  ?>
