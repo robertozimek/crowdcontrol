@@ -1,11 +1,17 @@
 <?php
   require_once('includes/database.php');
 
+  /**
+   *  Return a list of the companies in the database
+   *  @param mysqli $db the database to retrieve the companies from
+   *  @return json-encoded value containing data about the companies
+   */
   function request_companies($db){
     $getComps = "SELECT `company_name`, `join_date` FROM company";
     $results = $db->query($getComps);
     $exists = mysqli_num_rows($results);
 
+    //Set Not Found error if there are no companies in the database
     if($exists){
       $companies = array();
       while($rows = $results->fetch_assoc()){
@@ -18,6 +24,13 @@
     }
   }
 
+  /**
+   *  Return a list of branches that belong to a certain company
+   *  @param mysqli $db database to retrieve branches from
+   *  @param string $company the company of interest to retrieve branches
+   *  @return json-encoded value containing information about branches belonging to company
+   *          including but not limited to address, opening_hours, and closing_hours
+   */
   function request_branches($db, $company){
     $getBranches = "SELECT c.company_id, c.company_name, b.branch_id, b.branch_address, b.longitude, b.latitude,
                     b.opening_hours, b.closing_hours FROM company AS c
@@ -25,6 +38,7 @@
     $results = $db->query($getBranches);
     $exists = mysqli_num_rows($results);
 
+    //Set Not Found error if not branches are found
     if($exists){
       $branches = array();
       while($rows = $results->fetch_assoc()){
@@ -38,6 +52,13 @@
     }
   }
 
+  /**
+   *  Return a list of rooms that belong to a certain branch of a certain company
+   *  @param mysqli $db the database to retrieve information from
+   *  @param string $company company of interest
+   *  @param string $branch the branch belonging to company where the rooms are to be retrieved
+   *  @return json-encoded value containing data about rooms in the branch of company
+   */
   function request_rooms($db, $company, $branch){
     $query = "SELECT c.company_name, b.branch_address, r.room_number, r.max_capacity FROM `company` AS c
               INNER JOIN `branch` AS b on c.company_id = b.company_id
@@ -46,6 +67,7 @@
     $results = $db->query($query);
     $exists = mysqli_num_rows($results);
 
+    //Set Not Found error if no rooms found
     if($exists){
       $rooms = array();
       while($rows = $results->fetch_assoc()){
@@ -59,6 +81,14 @@
     }
   }
 
+  /**
+   *  Returns the crowd report of a certain room
+   *  @param mysqli $db database to retrieve data from
+   *  @param string $company the company where we want to retrieve data of room from
+   *  @param string $branch specific address of the room of interest
+   *  @param string $room the room number of interest
+   *  @return json-encoded value containing data about the crowdedness of the room
+   */
   function request_crowd_report($db, $company, $branch, $room){
     $query = "SELECT c.company_name, b.branch_address, r.room_id, r.room_number, r.people_in, r.people_out,
               r.max_capacity, r.date, r.time FROM `company` AS c
@@ -68,6 +98,7 @@
     $results = $db->query($query);
     $exists = mysqli_num_rows($results);
 
+    //Set Not Found error if no rooms exist or wrong company/branch for a room
     if($exists){
       $rooms = $results->fetch_assoc();
       $total_in = $rooms['people_in'];
@@ -77,6 +108,7 @@
       $date = $rooms['date'];
       $curr_number = $total_in - $total_out;
 
+      //Make sure crowd_percent is greater than or equal to 0 or less than or equal to 100
       if($curr_number >= 0){
         $crowd_percent = round(($total_in - $total_out) / $max * 100);
         if($crowd_percent > 100){
@@ -94,7 +126,11 @@
     }
   }
 
-
+  /**
+   *  Checks whether the room is closed or not
+   *  @param int $room_id the room of interest
+   *  @return true if room is closed, false otherwise
+   */
   function isClosed($room_id){
     $query = "SELECT r.room_id, r.branch_id, b.branch_id, b.closing_hours FROM roon AS r
               INNER JOIN branch AS b on r.branch_id = b.branch_id WHERE r.room_id = '$room_id'";
