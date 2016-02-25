@@ -15,7 +15,7 @@
       if($db->query($insert_comp) === TRUE)
         echo "Successfully inserted '$company' <br>";
       else {
-        echo mysqli_error($db);
+        echo "Error inserting '$company' <br>";
       }
     }
 
@@ -35,7 +35,7 @@
       if($db->query($insert_branch) === TRUE)
         echo "Successfully inserted '$branch' <br>";
       else
-        echo mysqli_error($db);
+        echo "Error inserting '$branch' <br>";
     }
 
     /**
@@ -68,7 +68,7 @@
         echo "Your Pi's id is " . $room_id . ". Keep it safe and secure. The Pi also needs it to submit counts" . "<br>";
       }
       else {
-        echo mysqli_error($db);
+        echo "Error inserting '$room' <br>";
       }
     }
 
