@@ -45,10 +45,10 @@
           $update = "UPDATE room SET `people_in` = '$peoplein', `people_out` = '$peopleout', `date` = '$date', `time` = '$time'
                      WHERE `room_id` = '$room_id'";
           if(!$db->query($update))
-            echo mysqli_error($db);
+            echo "Failed to update.";
         }
       }else{
-        echo mysqli_error($db);
+        echo "Failed to update.";
       }
     }
  ?>
