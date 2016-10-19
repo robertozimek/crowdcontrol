@@ -22,46 +22,21 @@
     NSCharacterSet *set = [NSCharacterSet URLQueryAllowedCharacterSet];
     self.company = [self.company stringByAddingPercentEncodingWithAllowedCharacters:set];
     self.address = [self.address stringByAddingPercentEncodingWithAllowedCharacters:set];
-    [self requestDataFromAPI];
+    self.wrapper = [[CrowdControlAPIWrapper alloc] init];
+    [self retreiveFromAPI:[self.wrapper getRoomsURLFromBranch:self.branchId]];
 }
 
 // Refresh data from the API
 - (IBAction)refreshButton:(id)sender {
-    [self requestDataFromAPI];
+    [self retreiveFromAPI:[self.wrapper getRoomsURLFromBranch:self.branchId]];
 }
 
 // Request data from the API
-- (void)requestDataFromAPI {
-    // Set up URL for the API call
-    NSString *urlString = [NSString stringWithFormat:@"https://crowdcontrol-adriantam18.rhcloud.com/api/v1/rooms/?branch_id=%@",self.branchId];
-    
-    NSURL *URL = [NSURL URLWithString:urlString];
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    [manager GET:URL.absoluteString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
-        
-        // Retrieve data and reload data into the table
-        self.rooms = [responseObject objectForKey:@"data"];
-        [self.tableView reloadData];
-        
-    } failure:^(NSURLSessionTask *operation, NSError *error) {
-        // Report any error to user with an alert
-        NSLog(@"Error: %@", error);
-        if ([[[error userInfo] objectForKey:AFNetworkingOperationFailingURLResponseErrorKey] statusCode] != 404) {
-            UIAlertController *alertController = [UIAlertController
-                                                  alertControllerWithTitle:@"Error"
-                                                  message:@"Unable to contact server"
-                                                  preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *okAction = [UIAlertAction
-                                       actionWithTitle:NSLocalizedString(@"OK", @"OK action")
-                                       style:UIAlertActionStyleDefault
-                                       handler:^(UIAlertAction *action)
-                                       {
-                                       }];
-            [alertController addAction:okAction];
-            [self presentViewController:alertController animated:YES completion:nil];
-        }
-    }];
+- (void)loadDataFromAPI:(id)JSONObject {
+    self.rooms = [JSONObject objectForKey:@"data"];
+    [self.tableView reloadData];
 }
+
 
 // Send company name, address, capacity, room, and open status to RoomCrowdnessViewController
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{

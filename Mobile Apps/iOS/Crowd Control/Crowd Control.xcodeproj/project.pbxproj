@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		36345B561DB709F5009D2245 /* CrowdControlAPIWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 36345B551DB709F5009D2245 /* CrowdControlAPIWrapper.m */; };
+		36345B5C1DB71687009D2245 /* LoadFromURLTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36345B5B1DB71687009D2245 /* LoadFromURLTableViewController.m */; };
 		3677845E1C23866400F62145 /* RoomsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3677845D1C23866400F62145 /* RoomsTableViewController.m */; };
 		367784611C238ECD00F62145 /* RoomCrowdnessViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 367784601C238ECD00F62145 /* RoomCrowdnessViewController.m */; };
 		36BAFBF21C23567A001D9234 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 36BAFBF11C23567A001D9234 /* main.m */; };
@@ -20,6 +22,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		36345B541DB709F5009D2245 /* CrowdControlAPIWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrowdControlAPIWrapper.h; sourceTree = "<group>"; };
+		36345B551DB709F5009D2245 /* CrowdControlAPIWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CrowdControlAPIWrapper.m; sourceTree = "<group>"; };
+		36345B5A1DB71687009D2245 /* LoadFromURLTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadFromURLTableViewController.h; sourceTree = "<group>"; };
+		36345B5B1DB71687009D2245 /* LoadFromURLTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadFromURLTableViewController.m; sourceTree = "<group>"; };
 		3677845C1C23866400F62145 /* RoomsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoomsTableViewController.h; sourceTree = "<group>"; };
 		3677845D1C23866400F62145 /* RoomsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RoomsTableViewController.m; sourceTree = "<group>"; };
 		3677845F1C238ECD00F62145 /* RoomCrowdnessViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoomCrowdnessViewController.h; sourceTree = "<group>"; };
@@ -88,6 +94,10 @@
 				3677845D1C23866400F62145 /* RoomsTableViewController.m */,
 				3677845F1C238ECD00F62145 /* RoomCrowdnessViewController.h */,
 				367784601C238ECD00F62145 /* RoomCrowdnessViewController.m */,
+				36345B541DB709F5009D2245 /* CrowdControlAPIWrapper.h */,
+				36345B551DB709F5009D2245 /* CrowdControlAPIWrapper.m */,
+				36345B5A1DB71687009D2245 /* LoadFromURLTableViewController.h */,
+				36345B5B1DB71687009D2245 /* LoadFromURLTableViewController.m */,
 				36BAFBF01C23567A001D9234 /* Supporting Files */,
 			);
 			path = "Crowd Control";
@@ -241,6 +251,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				3677845E1C23866400F62145 /* RoomsTableViewController.m in Sources */,
+				36345B5C1DB71687009D2245 /* LoadFromURLTableViewController.m in Sources */,
+				36345B561DB709F5009D2245 /* CrowdControlAPIWrapper.m in Sources */,
 				36BAFBF81C23567A001D9234 /* CompaniesViewController.m in Sources */,
 				367784611C238ECD00F62145 /* RoomCrowdnessViewController.m in Sources */,
 				36BAFBF51C23567A001D9234 /* AppDelegate.m in Sources */,
@@ -309,7 +321,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -348,7 +360,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

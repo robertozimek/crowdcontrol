@@ -21,45 +21,19 @@
     // Encode string for URL 
     NSCharacterSet *set = [NSCharacterSet URLQueryAllowedCharacterSet];
     self.company = [self.company stringByAddingPercentEncodingWithAllowedCharacters:set];
-    [self requestDataFromAPI];
+    self.wrapper = [[CrowdControlAPIWrapper alloc] init];
+    [self retreiveFromAPI:[self.wrapper getBranchURL:self.company]];
 }
 
 // Refresh data from the API
 - (IBAction)refreshButton:(id)sender {
-    [self requestDataFromAPI];
+    [self retreiveFromAPI:[self.wrapper getBranchURL:self.company]];
 }
 
 // Request data from the API
-- (void)requestDataFromAPI {
-    // Set up URL for API call
-    NSString *urlString = [NSString stringWithFormat:@"https://crowdcontrol-adriantam18.rhcloud.com/api/v1/branches/?company=%@",self.company];
-    
-    NSURL *URL = [NSURL URLWithString:urlString];
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    [manager GET:URL.absoluteString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
-        // Retrieve data and reload the table 
-        self.branches = [responseObject objectForKey:@"data"];
-        [self.tableView reloadData];
-        
-    } failure:^(NSURLSessionTask *operation, NSError *error) {
-        // Report any error to user with an alert
-        NSLog(@"Error: %@", error);
-        
-        if ([[[error userInfo] objectForKey:AFNetworkingOperationFailingURLResponseErrorKey] statusCode] != 404) {
-            UIAlertController *alertController = [UIAlertController
-                                                  alertControllerWithTitle:@"Error"
-                                                  message:@"Unable to contact server"
-                                                  preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *okAction = [UIAlertAction
-                                       actionWithTitle:NSLocalizedString(@"OK", @"OK action")
-                                       style:UIAlertActionStyleDefault
-                                       handler:^(UIAlertAction *action)
-                                       {
-                                       }];
-            [alertController addAction:okAction];
-            [self presentViewController:alertController animated:YES completion:nil];
-        }
-    }];
+- (void)loadDataFromAPI:(id)JSONObject {
+    self.branches = [JSONObject objectForKey:@"data"];
+    [self.tableView reloadData];
 }
 
 //  Send company name and address to RoomsTableViewController

@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <AFNetworking/AFNetworking.h>
+#import "LoadFromURLTableViewController.h"
 
-@interface RoomsTableViewController : UITableViewController
+@interface RoomsTableViewController : LoadFromURLTableViewController
 
 @property (nonatomic, strong) NSArray *rooms;
 @property (nonatomic, strong) NSString *company;

@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <AFNetworking/AFNetworking.h>
+#import "LoadFromURLTableViewController.h"
 
-@interface BranchTableViewController : UITableViewController
+@interface BranchTableViewController : LoadFromURLTableViewController
 
 @property (nonatomic, strong) NSArray *branches;
 @property (nonatomic, strong) NSString *company;

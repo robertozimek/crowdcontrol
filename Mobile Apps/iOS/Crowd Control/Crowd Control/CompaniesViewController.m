@@ -10,7 +10,6 @@
 #import "BranchTableViewController.h"
 
 @interface CompaniesViewController ()
-
 @end
 
 @implementation CompaniesViewController
@@ -18,44 +17,19 @@
 // Once view is loaded
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self requestDataFromAPI];
+    self.wrapper = [[CrowdControlAPIWrapper alloc] init];
+    [self retreiveFromAPI:self.wrapper.getCompaniesURL];
 }
 
 // Refresh data from the API
 - (IBAction)refreshButton:(id)sender {
-    [self requestDataFromAPI];
+    [self retreiveFromAPI:self.wrapper.getCompaniesURL];
 }
 
 // Request data from the API
-- (void)requestDataFromAPI {
-    // Set up URL for API call
-    NSURL *URL = [NSURL URLWithString:@"https://crowdcontrol-adriantam18.rhcloud.com/api/v1/companies"];
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    
-    [manager GET:URL.absoluteString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
-        // Retrieve data and reload table
-        self.companies = [responseObject objectForKey:@"data"];
-        [self.tableView reloadData];
-        
-    } failure:^(NSURLSessionTask *operation, NSError *error) {
-        // Report any error to user with an alert
-        NSLog(@"Error: %@", error);
-        
-        if ([[[error userInfo] objectForKey:AFNetworkingOperationFailingURLResponseErrorKey] statusCode] != 404) {
-            UIAlertController *alertController = [UIAlertController
-                                                  alertControllerWithTitle:@"Error"
-                                                  message:@"Unable to contact server"
-                                                  preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *okAction = [UIAlertAction
-                                       actionWithTitle:NSLocalizedString(@"OK", @"OK action")
-                                       style:UIAlertActionStyleDefault
-                                       handler:^(UIAlertAction *action)
-                                       {
-                                       }];
-            [alertController addAction:okAction];
-            [self presentViewController:alertController animated:YES completion:nil];
-        }
-    }];
+- (void)loadDataFromAPI:(id)JSONObject {
+    self.companies = [JSONObject objectForKey:@"data"];
+    [self.tableView reloadData];
 }
 
 #pragma mark - Table view data source
@@ -64,7 +38,7 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView
         cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier =@"Company Cell";
+    static NSString *CellIdentifier = @"Company Cell";
     UITableViewCell *cell = [tableView
                              dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     

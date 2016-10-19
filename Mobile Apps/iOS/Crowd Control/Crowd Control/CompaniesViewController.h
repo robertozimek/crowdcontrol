@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <AFNetworking/AFNetworking.h>
+#import "LoadFromURLTableViewController.h"
 
-@interface CompaniesViewController : UITableViewController
+@interface CompaniesViewController : LoadFromURLTableViewController
 
 @property (nonatomic, strong) NSArray *companies;
+
 @end
 

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <AFNetworking/AFNetworking.h>
+#import "CrowdControlAPIWrapper.h"
 
 @interface RoomCrowdnessViewController : UIViewController
 
@@ -17,6 +18,7 @@
 @property (nonatomic, strong) NSString *room;
 @property (nonatomic, strong) NSString *roomId;
 @property (nonatomic, strong) NSString *capacity;
+@property (nonatomic,strong) CrowdControlAPIWrapper *wrapper;
 @property (nonatomic, assign) BOOL open;
 
 @end
