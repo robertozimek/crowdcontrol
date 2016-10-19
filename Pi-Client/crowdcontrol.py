@@ -5,43 +5,54 @@ import numpy as np
 import argparse
 import cv2
 import imutils
+import json
+import requests
 
-# get user arguements such as room_id & key
+# construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
-ap.add_argument("-k", "--key",
-	help="key for post requests", default='3')
-ap.add_argument("-r", "--room_id", default='Alskajwmef',
-	help="the id for the room")
+ap.add_argument("-c", "--conf", required=True,
+	help="path to the JSON configuration file")
 args = vars(ap.parse_args())
+conf = json.load(open(args["conf"]))
+
+def camera_setup(camera):
+	# camera setup
+	camera.resolution = (320, 240)
+	camera.framerate = 16
+
+	# set static camera settings
+	time.sleep(2)
+	camera.shutter_speed = camera.exposure_speed
+	camera.exposure_mode = 'off'
+	g = camera.awb_gains
+	camera.awb_mode = 'off'
+	camera.awb_gains = g
+
+def add_ignore_lines(image):
+	# draw zone lines on video feed
+	zones = conf["zone_lines"]
+	for line in zones:
+		cv2.line(image, \
+		(zones["point1"][0], zones["point1"][1]), \
+		(zones["point1"][0], zones["point1"][1]), \
+		(zones["color"][0], zones["color"][1], zones["color"][2]), \
+		zones["linetype"])
 
 # post request information
-url = "https://crowdcontrol-adriantam18.rhcloud.com/requests.php"
-data = {'id': args["room_id"], 'in': '5', 'out': '0', 'auth': args["key"]}
+url = conf["url"]
+data = {'id': conf["room_id"], 'in': '0', 'out': '0', 'auth': conf["key"]}
 headers = {'Content-type': 'application/json'}
-
-# camera setup
-camera = PiCamera()
-camera.resolution = (320, 240)
-camera.framerate = 16
 
 # initalize people counters
 totalCount = 0
 inCount = 0
 outCount = 0
 
-# set static camera settings
-time.sleep(2)
-camera.shutter_speed = camera.exposure_speed
-camera.exposure_mode = 'off'
-g = camera.awb_gains
-camera.awb_mode = 'off'
-camera.awb_gains = g
-
+camera = PiCamera()
+camera_setup(camera)
 rawCapture = PiRGBArray(camera, size=(320, 240))
-
 # allow the camera to warmup
 time.sleep(0.1)
-
 
 # set up background subtraction
 bgSub = cv2.createBackgroundSubtractorKNN()
@@ -54,18 +65,12 @@ resetIn = False
 resetOut = False
 timerCount = 0
 
-
 # capture frames from the camera
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
 	# grab frame of video feed
 	image = frame.array
 
-	# draw zone lines on video feed
-	cv2.line(image, (0, 75), (320, 75), (0, 255, 0), 1)
-	cv2.line(image, (0, 115), (320, 115), (0, 0, 255), 1)
-	cv2.line(image, (0, 155), (320, 155), (0, 0, 255), 1)
-	cv2.line(image, (0, 195), (320, 195), (0, 255, 0), 1)
-	cv2.line(image, (117, 0), (117, 480), (255, 0, 0), 2)
+	add_ignore_lines(image)
 
 	# apply a blur and background subtraction
 	mask = cv2.GaussianBlur(image, (21, 21), 0)
@@ -136,8 +141,8 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 			resetOut = False
 			resetIn = False
 			# update count on server
-            data = {'id': args["room_id"], 'in': '0', 'out': '1', 'auth': args["key"]}
-            r = requests.post(url, data=json.dumps(data), headers=headers)
+			data = {'id': conf["room_id"], 'in': '0', 'out': '1', 'auth': conf["key"]}
+			r = requests.post(url, data=json.dumps(data), headers=headers)
 
 		# determine if person entered and count them
 		elif (resetIn) and (zone1 or zone2 or zone3):
@@ -149,8 +154,8 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 			resetOut = False
 			resetIn = False
 			# update count on server
-            data = {'id': args["room_id"], 'in': '1', 'out': '0', 'auth': args["key"]}
-            r = requests.post(url, data=json.dumps(data), headers=headers)
+			data = {'id': conf["room_id"], 'in': '1', 'out': '0', 'auth': conf["key"]}
+			r = requests.post(url, data=json.dumps(data), headers=headers)
 		else:
 			resetOut = False
 			resetIn = False

@@ -1,0 +1,39 @@
+{
+  "room_id": "3",
+  "key": "Your API Key",
+  "url": "https://crowdcontrol-adriantam18.rhcloud.com/requests.php",
+  "zone_lines" : [
+    {
+        "point1": [0, 75],
+        "point2": [320, 75],
+        "color": [0, 255, 0],
+        "linetype": 1
+    },
+    {
+          "point1": [0, 115],
+          "point2": [320, 115],
+          "color": [0, 0, 225],
+          "linetype": 1
+    },
+    {
+          "point1": [0, 155],
+          "point2": [320, 155],
+          "color": [0, 0, 225],
+          "linetype": 1
+    },
+    {
+          "point1": [0, 195],
+          "point2": [320, 195],
+          "color": [0, 225, 0],
+          "linetype": 1
+    },
+    {
+          "point1": [117, 0],
+          "point2": [117, 480],
+          "color": [225, 0, 0],
+          "linetype": 2
+    },
+
+  ]
+
+}
