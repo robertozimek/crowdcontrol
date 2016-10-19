@@ -33,14 +33,14 @@
 // Request data from the API
 - (void)requestDataFromAPI {
     // Set up URL for the API call
-    NSString *urlString = [NSString stringWithFormat:@"https://crowdcontrol-adriantam18.rhcloud.com/requests.php/?data=room&comp=%@&branch=%@",self.company, self.address];
+    NSString *urlString = [NSString stringWithFormat:@"https://crowdcontrol-adriantam18.rhcloud.com/api/v1/rooms/?branch_id=%@",self.branchId];
     
     NSURL *URL = [NSURL URLWithString:urlString];
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     [manager GET:URL.absoluteString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
         
         // Retrieve data and reload data into the table
-        self.rooms = [responseObject objectForKey:@"rooms"];
+        self.rooms = [responseObject objectForKey:@"data"];
         [self.tableView reloadData];
         
     } failure:^(NSURLSessionTask *operation, NSError *error) {
@@ -70,12 +70,12 @@
         NSIndexPath *savedSelection = self.tableView.indexPathForSelectedRow;
         UITableViewCell *selectedCell = [self.tableView cellForRowAtIndexPath:savedSelection];
         for(int i = 0; i < [self.rooms count]; i++) {
-            if (self.rooms[i][@"room"] == selectedCell.textLabel.text) {
+            if (self.rooms[i][@"room_number"] == selectedCell.textLabel.text) {
                 // Pass data to next view
-                roomController.company = self.rooms[i][@"company"];
-                roomController.address = self.rooms[i][@"address"];
-                roomController.capacity = self.rooms[i][@"max_capacity"];
-                roomController.room = self.rooms[i][@"room"];
+                roomController.company = self.company;
+                roomController.address = self.address;
+                roomController.room = self.rooms[i][@"room_number"];
+                roomController.roomId = self.rooms[i][@"room_id"];
                 roomController.open = self.open;
             }
         }
@@ -100,7 +100,7 @@
     UITableViewCell *cell = [tableView
                              dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
-    cell.textLabel.text= [self.rooms objectAtIndex:indexPath.row][@"room"];
+    cell.textLabel.text= [self.rooms objectAtIndex:indexPath.row][@"room_number"];
     
     return cell;
 }

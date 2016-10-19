@@ -29,11 +29,12 @@
     }
     
     
-    // Encode strings for URL
-    NSCharacterSet *set = [NSCharacterSet URLQueryAllowedCharacterSet];
-    self.company = [self.company stringByAddingPercentEncodingWithAllowedCharacters:set];
-    self.address = [self.address stringByAddingPercentEncodingWithAllowedCharacters:set];
-    self.room = [self.room stringByAddingPercentEncodingWithAllowedCharacters:set];
+    self.company = [self.company stringByRemovingPercentEncoding];
+    self.company = [self.company stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    self.address = [self.address stringByRemovingPercentEncoding];
+    self.address = [self.address stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    self.room = [self.room stringByRemovingPercentEncoding];
+    self.room = [self.room stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     [self requestDataFromAPI];
 }
 
@@ -46,18 +47,17 @@
 // Request data from the API
 - (void)requestDataFromAPI {
     // Set up URL for API call
-    NSString *urlString = [NSString stringWithFormat:@"https://crowdcontrol-adriantam18.rhcloud.com/requests.php/?data=crowd&comp=%@&branch=%@&room=%@",self.company, self.address, self.room];
+    NSString *urlString = [NSString stringWithFormat:@"https://crowdcontrol-adriantam18.rhcloud.com/api/v1/rooms/%@",self.roomId];
     
     NSURL *URL = [NSURL URLWithString:urlString];
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     [manager GET:URL.absoluteString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
         
         // Fill in the data for company
-        self.crowd = [responseObject objectForKey:@"crowd"];
-        self.companyLabel.text = self.crowd[@"company"];
-        self.addressLabel.text = self.crowd[@"address"];
-        self.roomLabel.text = self.crowd[@"room"];
-        self.roomCapacityLabel.text = self.capacity;
+        self.crowd = [responseObject objectForKey:@"data"][0];
+        self.companyLabel.text = self.company;
+        self.addressLabel.text = self.address;
+        self.roomLabel.text = self.crowd[@"room_number"];
         self.lastUpdateLabel.text = self.crowd[@"time"];
         
         // Check if business is open before reporting crowdness

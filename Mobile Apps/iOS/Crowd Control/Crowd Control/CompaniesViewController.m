@@ -29,12 +29,12 @@
 // Request data from the API
 - (void)requestDataFromAPI {
     // Set up URL for API call
-    NSURL *URL = [NSURL URLWithString:@"https://crowdcontrol-adriantam18.rhcloud.com/requests.php/?data=comp"];
+    NSURL *URL = [NSURL URLWithString:@"https://crowdcontrol-adriantam18.rhcloud.com/api/v1/companies"];
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     
     [manager GET:URL.absoluteString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
         // Retrieve data and reload table
-        self.companies = [responseObject objectForKey:@"companies"];
+        self.companies = [responseObject objectForKey:@"data"];
         [self.tableView reloadData];
         
     } failure:^(NSURLSessionTask *operation, NSError *error) {

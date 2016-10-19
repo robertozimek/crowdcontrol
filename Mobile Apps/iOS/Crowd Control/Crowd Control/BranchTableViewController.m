@@ -32,13 +32,13 @@
 // Request data from the API
 - (void)requestDataFromAPI {
     // Set up URL for API call
-    NSString *urlString = [NSString stringWithFormat:@"https://crowdcontrol-adriantam18.rhcloud.com/requests.php/?data=branch&comp=%@",self.company];
+    NSString *urlString = [NSString stringWithFormat:@"https://crowdcontrol-adriantam18.rhcloud.com/api/v1/branches/?company=%@",self.company];
     
     NSURL *URL = [NSURL URLWithString:urlString];
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     [manager GET:URL.absoluteString parameters:nil progress:nil success:^(NSURLSessionTask *task, id responseObject) {
         // Retrieve data and reload the table 
-        self.branches = [responseObject objectForKey:@"branches"];
+        self.branches = [responseObject objectForKey:@"data"];
         [self.tableView reloadData];
         
     } failure:^(NSURLSessionTask *operation, NSError *error) {
@@ -72,6 +72,7 @@
             if (self.branches[i][@"address"] == selectedCell.textLabel.text) {
                 
                 // Pass company name and address to next view
+                roomController.branchId = self.branches[i][@"branch_id"];
                 roomController.company = self.branches[i][@"company_name"];
                 roomController.address = self.branches[i][@"address"];
                 
