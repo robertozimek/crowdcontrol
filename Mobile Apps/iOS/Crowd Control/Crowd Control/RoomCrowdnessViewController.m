@@ -39,7 +39,7 @@
         self.company = [self.company stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     }
     
-    self.wrapper = [[CrowdControlAPIWrapper alloc] init];
+    self.wrapper = [CrowdControlAPIWrapper sharedInstance];
     [self retreiveFromAPI:[self.wrapper getRoomCrowdnessURLForRoom:self.roomId]];
 }
 

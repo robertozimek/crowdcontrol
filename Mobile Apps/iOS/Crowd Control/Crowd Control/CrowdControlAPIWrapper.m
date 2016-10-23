@@ -23,12 +23,22 @@
 
 @implementation CrowdControlAPIWrapper
 
++ (id)sharedInstance {
+    static CrowdControlAPIWrapper *sharedAPIWrappper = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedAPIWrappper = [[self alloc] init];
+    });
+    return sharedAPIWrappper;
+}
+
 - (id)init {
     if (self = [super init]) {
         self.baseURL = @"https://crowdcontrol-adriantam18.rhcloud.com/api/v1/";
     }
     return self;
 }
+
 
 - (NSURL *) getCompaniesURL {
     self.companiesURL = [NSString stringWithFormat:@"%@companies", self.baseURL];

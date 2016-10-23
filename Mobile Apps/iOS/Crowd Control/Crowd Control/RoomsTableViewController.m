@@ -22,7 +22,7 @@
     NSCharacterSet *set = [NSCharacterSet URLQueryAllowedCharacterSet];
     self.company = [self.company stringByAddingPercentEncodingWithAllowedCharacters:set];
     self.address = [self.address stringByAddingPercentEncodingWithAllowedCharacters:set];
-    self.wrapper = [[CrowdControlAPIWrapper alloc] init];
+    self.wrapper = [CrowdControlAPIWrapper sharedInstance];
     [self retreiveFromAPI:[self.wrapper getRoomsURLFromBranch:self.branchId]];
 }
 

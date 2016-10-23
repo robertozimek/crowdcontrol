@@ -21,7 +21,7 @@
     // Encode string for URL 
     NSCharacterSet *set = [NSCharacterSet URLQueryAllowedCharacterSet];
     self.company = [self.company stringByAddingPercentEncodingWithAllowedCharacters:set];
-    self.wrapper = [[CrowdControlAPIWrapper alloc] init];
+    self.wrapper = [CrowdControlAPIWrapper sharedInstance];
     [self retreiveFromAPI:[self.wrapper getBranchURL:self.company]];
 }
 

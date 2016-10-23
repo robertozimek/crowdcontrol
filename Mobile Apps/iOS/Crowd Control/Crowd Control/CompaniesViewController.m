@@ -17,7 +17,7 @@
 // Once view is loaded
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.wrapper = [[CrowdControlAPIWrapper alloc] init];
+    self.wrapper = [CrowdControlAPIWrapper sharedInstance];
     [self retreiveFromAPI:self.wrapper.getCompaniesURL];
 }
 

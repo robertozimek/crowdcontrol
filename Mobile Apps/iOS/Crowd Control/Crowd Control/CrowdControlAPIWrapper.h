@@ -10,6 +10,7 @@
 #import <AFNetworking/AFNetworking.h>
 
 @interface CrowdControlAPIWrapper : NSObject
+    + (id)sharedInstance;
     - (id)init;
     - (NSURL *) getCompaniesURL;
     - (NSURL *) getBranchURL:(NSString*)company;
